@@ -1,4 +1,4 @@
 /**
- * AzureDevops API EndPoint
+ * Bitbucket API EndPoint
  */
-export const API_URL = 'https://dev.azure.com';
+export const API_URL = 'https://api.bitbucket.org';

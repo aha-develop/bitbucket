@@ -1,5 +1,5 @@
 import { linkPullRequestToRecord } from '@lib/fields';
-import adClient from '@lib/azureDevopsClient';
+import adClient from '@lib/bitbucketClient';
 
 import { getExtensionFields } from '@lib/fields';
 

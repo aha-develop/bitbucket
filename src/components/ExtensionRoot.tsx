@@ -10,7 +10,7 @@ export const ExtensionRoot = ({ children }) => {
   return (
     <>
       <Styles />
-      <AuthProvider serviceName="ado" serviceParameters={{}}>
+      <AuthProvider serviceName="atlassian" serviceParameters={{}}>
         {children}
       </AuthProvider>
     </>

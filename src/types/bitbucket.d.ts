@@ -55,8 +55,7 @@ declare namespace Bitbucket {
   }
 
   interface PRGetOptions {
-    organization: string;
-    project: string;
+    workspace: string;
     repositoryId: string;
     pullRequestId: string;
   }

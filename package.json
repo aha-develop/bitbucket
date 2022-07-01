@@ -22,7 +22,7 @@
   },
   "ahaExtension": {
     "cspSources": [
-      "https://dev.azure.com"
+      "https://api.bitbucket.org"
     ],
     "contributes": {
       "views": {
