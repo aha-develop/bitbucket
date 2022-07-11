@@ -21,6 +21,24 @@ export const Styles = () => {
           font-size: 85%;
         }
 
+        .pull-requests {
+          margin: 24px 0 0;
+        }
+
+        .pull-request {
+          display: grid;
+          grid-template-columns: auto 1fr auto;
+          align-items: center;
+          grid-gap: 8px;
+          border-bottom: 1px solid var(--theme-light-border);
+          padding-bottom: 8px;
+          margin-bottom: 8px;
+        }
+
+        .pull-request:last-child {
+          border-bottom: none;
+        }
+
         .pr-state {
           display: inline-block;
           font-size: 12px;
@@ -29,18 +47,19 @@ export const Styles = () => {
           padding: 4px 8px;
           border-radius: 4px;
           text-transform: capitalize;
+          font-weight: 500;
         }
         .pr-state-open {
-          color: var(--theme-green-text);
-          background-color: var(--theme-green-background);
+          color: var(--aha-gray-100);
+          background-color: var(--aha-blue-500);
         }
         .pr-state-merged {
-          color: #463159;
-          background-color: #e5dced;
+          color: var(--aha-gray-100);
+          background-color: var(--aha-green-800);
         }
         .pr-state-declined {
-          color: var(--theme-red-text);
-          background-color: var(--theme-red-background);
+          color: var(--aha-gray-100);
+          background-color: var(--aha-red-800);
         }
 
         .pr-label {

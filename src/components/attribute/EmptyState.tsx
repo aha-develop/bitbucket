@@ -98,7 +98,7 @@ export const EmptyState = ({ record }) => {
     )
   }
 
-  if (hasConfiguredWebhook) {
+  if (!hasConfiguredWebhook) {
     return (
       <EmptyStateBox>
         <aha-flex justify-content="space-between" align-items="flex-start">

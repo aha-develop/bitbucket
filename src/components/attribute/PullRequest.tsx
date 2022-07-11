@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useClipboard } from '@lib/useClipboard';
+import React from 'react';
 import { ExternalLink } from '../ExternalLink';
 import { PrState } from '../PrState';
 
@@ -8,14 +9,37 @@ export type PullRequestProps = {
 };
 
 export const PullRequest = ({ record, pr }: PullRequestProps) => {
+  const [onCopy, copied] = useClipboard()
+
   return (
-    <aha-flex direction="column">
-      <aha-flex align-items="center" justify-content="space-between" gap="5px">
-        <span>
-          <ExternalLink href={pr?.webUrl ?? ''}>{pr?.title ?? ''}</ExternalLink>
-        </span>
+    <>
+      <div className="pull-request">
         <PrState pr={pr} />
-      </aha-flex>
-    </aha-flex>
+        <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <ExternalLink href={pr?.webUrl ?? ''}>{pr?.title ?? ''}</ExternalLink>
+        </div>
+        <div onClick={() => onCopy(pr.sourceBranch)} style={{ cursor: 'pointer' }}>
+          <aha-tooltip>
+            <span slot="trigger" className="text-muted">
+              <aha-icon icon="fa fa-code-branch" />
+            </span>
+            {
+              copied ?
+                'Copied!' :
+                <>
+                  <div style={{ whiteSpace: 'nowrap' }}>
+                    <strong>
+                      <aha-icon icon="fa fa-code-branch" />
+                      &nbsp;
+                      {pr.sourceBranch}
+                    </strong>
+                  </div>
+                  <em>Click to copy</em>
+                </>
+            }
+          </aha-tooltip>
+        </div>
+      </div>
+    </>
   );
 };

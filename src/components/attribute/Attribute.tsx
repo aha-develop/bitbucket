@@ -15,7 +15,7 @@ export const Attribute = ({ fields, record }: AttributeProps, { identifier, sett
   const { branches, pullRequests } = fields;
   const { error, authed } = useAuth(async () => { });
   const authError = error && <div>{error}</div>;
-  const isLinked = [branches, pullRequests].some((ary) => ary && ary?.length > 0);
+  const isLinked = [pullRequests].some((ary) => ary && ary?.length > 0);
 
 
   if (authError) {
@@ -28,16 +28,20 @@ export const Attribute = ({ fields, record }: AttributeProps, { identifier, sett
 
   if (isLinked) {
     return (
-      <>
+      <div className="mt-1 ml-1">
         <aha-flex align-items="center" justify-content="space-between" gap="5px">
-          <aha-flex direction="column" gap="8px" justify-content="space-between">
-            <Branches branches={branches ?? []} />
-            <PullRequests record={record} prs={pullRequests ?? []}></PullRequests>
-          </aha-flex>
-          <Menu record={record} />
+          <div>Related PRs</div>
+          <aha-button-group>
+            {/* // FIXME */}
+            <aha-button size="mini" href="https://github.com/aha-develop/bitbucket" target="_blank" rel="noopener noreferrer">
+              Copy ID
+            </aha-button>
+            <Menu record={record} />
+          </aha-button-group>
         </aha-flex>
 
-      </>
+        <PullRequests record={record} prs={pullRequests ?? []}></PullRequests>
+      </div>
     );
   }
 

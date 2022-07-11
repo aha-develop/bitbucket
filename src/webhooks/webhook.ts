@@ -11,7 +11,10 @@ aha.on('webhook', async ({ headers, payload }: { headers: Record<string, string>
     case 'repo:push':
       await handleCreateBranch(payload as Webhook.PushPayload);
       break;
+    case 'pullrequest:created':
     case 'pullrequest:updated':
+    case 'pullrequest:fulfilled':
+    case 'pullrequest:rejected':
       await handlePullRequest(payload as Webhook.PullRequestPayload);
       break;
     default:
