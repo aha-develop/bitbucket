@@ -12,6 +12,7 @@ export type AttributeProps = {
 };
 
 export const Attribute = ({ fields, record }: AttributeProps, { identifier, settings }) => {
+  const [onCopy, copied] = useClipboard()
   const { branches, pullRequests } = fields;
   const { error, authed } = useAuth(async () => { });
   const authError = error && <div>{error}</div>;
@@ -32,9 +33,8 @@ export const Attribute = ({ fields, record }: AttributeProps, { identifier, sett
         <aha-flex align-items="center" justify-content="space-between" gap="5px">
           <div>Related PRs</div>
           <aha-button-group>
-            {/* // FIXME */}
-            <aha-button size="mini" href="https://github.com/aha-develop/bitbucket" target="_blank" rel="noopener noreferrer">
-              Copy ID
+            <aha-button size="mini" onClick={(e) => onCopy(record.referenceNum)}>
+              {copied ? 'Copied!' : 'Copy ID'}
             </aha-button>
             <Menu record={record} />
           </aha-button-group>
