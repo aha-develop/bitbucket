@@ -5,6 +5,7 @@ import { Menu } from './Menu';
 import { PullRequests } from './PullRequests';
 import { Branches } from './Branches';
 import { EmptyState } from './EmptyState';
+import { useClipboard } from '@lib/useClipboard';
 
 export type AttributeProps = {
   record: Aha.RecordUnion;
