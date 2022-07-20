@@ -40,7 +40,7 @@ class BitbucketClient {
    * @returns
    */
   auth = async (callBack: (token: string) => any = (token) => {}) => {
-    const authData = await aha.auth('atlassian', { useCachedRetry: false });
+    const authData = await aha.auth('bitbucket', { useCachedRetry: false });
     this.setToken(authData.token);
     return await callBack(authData.token);
   };
