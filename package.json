@@ -57,6 +57,23 @@
           "entryPoint": "src/webhooks/webhook.ts",
           "public": true
         }
+      },
+      "automationTriggers": {
+        "prOpened": {
+          "title": "PR opened"
+        },
+        "prMerged": {
+          "title": "PR merged"
+        },
+        "prDeclined": {
+          "title": "PR declined"
+        },
+        "prApproved": {
+          "title": "PR approved"
+        },
+        "prChangesRequested": {
+          "title": "PR changes requested"
+        }
       }
     }
   }

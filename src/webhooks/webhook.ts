@@ -7,22 +7,20 @@ aha.on('webhook', async ({ headers, payload }: { headers: Record<string, string>
   // Flag the account as having successfully set up the webhook
   aha.account.setExtensionField(IDENTIFIER, 'webhookConfigured', true);
 
-  switch (event) {
-    case 'repo:push':
+  const [category, action] = event.split(':');
+  switch (category) {
+    case 'repo':
       await handleCreateBranch(payload as Webhook.PushPayload);
       break;
-    case 'pullrequest:created':
-    case 'pullrequest:updated':
-    case 'pullrequest:fulfilled':
-    case 'pullrequest:rejected':
-      await handlePullRequest(payload as Webhook.PullRequestPayload);
+    case 'pullrequest':
+      await handlePullRequest(payload as Webhook.PullRequestPayload, action);
       break;
     default:
       break;
   }
 });
 
-const handlePullRequest = async (payload: Webhook.PullRequestPayload) => {
+const handlePullRequest = async (payload: Webhook.PullRequestPayload, action) => {
   const pr: Bitbucket.PR = payload.pullrequest;
   if (!pr) {
     console.error('No pull request information provided in payload');
@@ -35,6 +33,7 @@ const handlePullRequest = async (payload: Webhook.PullRequestPayload) => {
   // Link MR to record
   await linkPullRequestToRecord(pr, record);
   await triggerEvent('pr.update', payload, record);
+  await triggerAutomation(payload, action, record);
 };
 
 async function handleCreateBranch(payload: Webhook.PushPayload) {
@@ -60,6 +59,35 @@ async function handleCreateBranch(payload: Webhook.PushPayload) {
       }
     })
   );
+}
+
+/** Trigger an automation
+ *
+ * @param payload
+ * @param record
+ */
+async function triggerAutomation(payload: Webhook.PullRequestPayload, action, record: Aha.RecordUnion) {
+  if (!payload) return;
+  if (!payload.pullrequest) return;
+
+  // Check the record is a supported type
+  if (!['Epic', 'Feature', 'Requirement'].includes(record.typename)) {
+    return;
+  }
+
+  const triggers: Record<string, (payload: Webhook.PullRequestPayload) => string> = {
+    created: (payload) => 'prOpened',
+    changes_request_created: (payload) => 'prChangesRequested',
+    approved: (payload) => 'prApproved',
+    fulfilled: (payload) => 'prMerged',
+    rejected: (payload) => 'prDeclined'
+  };
+
+  const trigger = (triggers[action] || (() => null))(payload);
+
+  if (trigger) {
+    await aha.triggerAutomationOn(record, [IDENTIFIER, trigger].join('.'), true);
+  }
 }
 
 /**

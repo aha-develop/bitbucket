@@ -37,6 +37,14 @@ declare namespace Webhook {
     actor: object;
     repository: object;
     pullrequest: Bitbucket.PR;
+    approval?: {
+      date: string;
+      user: object;
+    };
+    changes_request?: {
+      date: string;
+      user: object;
+    };
   }
 
   type Payload = PushPayload | PullRequestPayload;
