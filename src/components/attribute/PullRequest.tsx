@@ -1,6 +1,5 @@
 import { useClipboard } from '@lib/useClipboard';
 import React from 'react';
-import { ExternalLink } from '../ExternalLink';
 import { PrState } from '../PrState';
 
 export type PullRequestProps = {
@@ -16,7 +15,9 @@ export const PullRequest = ({ record, pr }: PullRequestProps) => {
       <div className="pull-request">
         <PrState pr={pr} />
         <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-          <ExternalLink href={pr?.webUrl ?? ''}>{pr?.title ?? ''}</ExternalLink>
+          <aha-link>
+            <a href={pr?.webUrl ?? ''} target="_blank">{pr?.title ?? ''}</a>
+          </aha-link>
         </div>
         <div onClick={() => onCopy(pr.sourceBranch)} style={{ cursor: 'pointer' }}>
           <aha-tooltip>

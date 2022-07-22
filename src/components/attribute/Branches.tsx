@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { ExternalLink } from '../ExternalLink';
 
 export type BranchProps = {
   branch: IRecordExtensionFieldBranch;
@@ -19,7 +18,9 @@ export const Branch = ({ branch }: BranchProps) => {
       <span className="type-icon">
         <aha-icon icon="fa-regular fa-code-branch type-icon" />
       </span>
-      <ExternalLink href={branch.url}>{branch.name.replace('refs/heads/', '')}</ExternalLink>
+      <aha-link>
+        <a href={branch.url} target="_blank">{branch.name.replace('refs/heads/', '')}</a>
+      </aha-link>
       <a
         href="#"
         onClick={onCopy}
