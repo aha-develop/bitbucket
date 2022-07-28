@@ -6,6 +6,7 @@ It provides these contributions:
 
 - `Links attribute` - Link Aha! Develop records to Bitbucket branches and pull requests. See the status checks and approvals for the PR.
 - `Webhook` - Automatically links pull requests to records if the PR title starts with the record reference number.
+- `Automation events` - Update the status of linked Aha! Develop records as you work on PRs in Bitbucket.
 
 ![Example screenshot](res/demo.png)
 
@@ -32,6 +33,10 @@ aha.on({ event: 'aha-develop.bitbucket.pr.update' }, async ({ record, payload })
       - Repository - Push
       - Pull request - Created
       - Pull request - Updated
+      - Pull request - Approved
+      - Pull request - Changes Request created
+      - Pull request - Merged
+      - Pull request - Declined
    4. Set the URL field to the value copied in the first step.
 
 ![Bitbucket setup](res/webhook-setup.png)

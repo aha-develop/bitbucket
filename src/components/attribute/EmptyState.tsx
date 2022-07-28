@@ -67,7 +67,7 @@ export const EmptyState = ({ record }) => {
   useEffect(() => {
     (async () => {
       const hasConfiguredWebhook: boolean = await aha.account.getExtensionField(IDENTIFIER, 'webhookConfigured');
-      setHasConfiguredWebhook(hasConfiguredWebhook);
+      setHasConfiguredWebhook(!!hasConfiguredWebhook); // coerce from null to false if the field isn't set
     })();
   }, []);
 
