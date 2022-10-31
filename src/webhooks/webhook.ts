@@ -30,8 +30,6 @@ const handlePullRequest = async (payload: Webhook.PullRequestPayload, action) =>
   // Make sure the MR is linked to its record.
   const record = await linkPullRequest(pr);
 
-  // Link MR to record
-  await linkPullRequestToRecord(pr, record);
   await triggerEvent('pr.update', payload, record);
   await triggerAutomation(payload, action, record);
 };
