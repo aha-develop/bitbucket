@@ -11,9 +11,7 @@ export const PullRequests = ({ record, prs }: PullRequestsProps) => {
     <div className="pull-requests">
       <aha-flex direction="column" gap="3px">
         {(prs || []).map((pr, idx) => (
-          <>
-            <PullRequest key={idx} record={record} pr={pr} />
-          </>
+          <PullRequest key={idx} record={record} pr={pr} />
         ))}
       </aha-flex>
     </div>
