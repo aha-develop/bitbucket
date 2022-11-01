@@ -19,7 +19,6 @@ export const Attribute = ({ fields, record }: AttributeProps, { identifier, sett
   const authError = error && <div>{error}</div>;
   const isLinked = [pullRequests].some((ary) => ary && ary?.length > 0);
 
-
   if (authError) {
     return (
       <aha-flex align-items="center" justify-content="space-between" gap="5px">

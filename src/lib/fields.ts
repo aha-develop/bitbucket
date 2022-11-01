@@ -153,16 +153,26 @@ export const BitbucketPRToPRLink = (pr: Bitbucket.PR): IExtensionFieldPullReques
  */
 export const linkPullRequest = async (pr: Bitbucket.PR) => {
   let record;
+
   if (pr.id) {
     record = await referenceToRecordFromId(pr.id.toString());
+    if (record) {
+      console.log(`Linking to ${record.referenceNum} from PR id`);
+    }
   }
 
   if (!record && pr.source.branch.name) {
     record = await referenceToRecordFromTitle(pr.source.branch.name);
+    if (record) {
+      console.log(`Linking to ${record.referenceNum} from PR branch name`);
+    }
   }
 
   if (!record && pr.title) {
     record = await referenceToRecordFromTitle(pr.title);
+    if (record) {
+      console.log(`Linking to ${record.referenceNum} from PR title`);
+    }
   }
 
   if (record) {
