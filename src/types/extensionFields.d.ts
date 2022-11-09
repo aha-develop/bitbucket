@@ -11,10 +11,6 @@ declare interface IRecordExtensionFieldBranch {
   url?: string;
 }
 
-declare interface IAccountExtensionFields {
-  bitbucketPRs?: IExtensionFieldPullRequest[];
-}
-
 declare interface IExtensionFieldPullRequest {
   id: string;
   title?: string;
@@ -29,5 +25,3 @@ declare interface IExtensionFieldPullRequest {
     referenceNum: string;
   };
 }
-
-declare type IAccountExtensionField = keyof IAccountExtensionFields;
