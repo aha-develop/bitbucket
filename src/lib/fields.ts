@@ -15,16 +15,6 @@ export const linkPullRequestToRecord = async (pr: Bitbucket.PR, record: Aha.Reco
     }
   ]);
 
-  await appendFieldToAccount('bitbucketPRs', [
-    {
-      ...PRLink,
-      ahaReference: {
-        type: record?.typename,
-        referenceNum: record?.referenceNum
-      }
-    }
-  ]);
-
   if (pr.source.branch.name) {
     await linkBranchToRecord(pr.source.branch.name, pr.source.repository.links['html'].href, record);
   }
@@ -40,7 +30,7 @@ export const linkPullRequestToRecord = async (pr: Bitbucket.PR, record: Aha.Reco
 const appendField = async <T = any>(
   fieldName: IAccountExtensionField | IRecordExtensionField,
   newValue: T,
-  record: Aha.RecordUnion | Aha.Account = aha.account
+  record: Aha.RecordUnion
 ) => {
   console.log(`Link to ${record?.typename}:${record?.['referenceNum'] || record?.uniqueId}`);
 
@@ -72,20 +62,6 @@ const appendField = async <T = any>(
 /**
  * Append a field in record
  *
- * @param fieldName
- * @param newValue
- * @returns
- */
-export const appendFieldToAccount = (
-  fieldName: IAccountExtensionField,
-  newValue: IAccountExtensionFields[IAccountExtensionField]
-) => {
-  return appendField(fieldName, newValue, aha.account);
-};
-
-/**
- * Append a field in account
- *
  * @param record
  * @param fieldName
  * @param newValue
@@ -107,7 +83,7 @@ export const appendFieldToRecord = async (
  * @param replacer
  */
 const replaceField = async (
-  record: Aha.RecordUnion | Aha.Account,
+  record: Aha.RecordUnion,
   fieldName: IAccountExtensionField | IRecordExtensionField,
   replacer: (val: any) => any
 ) => {
@@ -154,13 +130,6 @@ export const BitbucketPRToPRLink = (pr: Bitbucket.PR): IExtensionFieldPullReques
 export const linkPullRequest = async (pr: Bitbucket.PR) => {
   let record;
 
-  if (pr.id) {
-    record = await referenceToRecordFromId(pr.id.toString());
-    if (record) {
-      console.log(`Linking to ${record.referenceNum} from PR id`);
-    }
-  }
-
   if (!record && pr.source.branch.name) {
     record = await referenceToRecordFromTitle(pr.source.branch.name);
     if (record) {
@@ -198,14 +167,6 @@ export const unlinkPullRequest = async (record: Aha.RecordUnion, id: string) => 
       return [];
     }
   });
-
-  await replaceField(aha.account, 'bitbucketPRs', (PRs) => {
-    if (PRs) {
-      return PRs.filter((PR) => PR.id == accountPRId(id, record.referenceNum));
-    } else {
-      return [];
-    }
-  });
 };
 
 export const unlinkPullRequests = async (record: Aha.RecordUnion) => {
@@ -217,16 +178,11 @@ export const unlinkPullRequests = async (record: Aha.RecordUnion) => {
     });
     return;
   });
-
-  await replaceField(aha.account, 'bitbucketPRs', (accountPRs: IExtensionFieldPullRequest[]) => {
-    if (!accountPRs) return [];
-    return accountPRs.filter((accountPR) => !ids.includes(accountPR.id));
-  });
 };
 
 export const getExtensionFields = async (
   fieldName: IAccountExtensionField | IRecordExtensionField,
-  record: Aha.RecordUnion | Aha.Account = aha.account
+  record: Aha.RecordUnion
 ): Promise<IAccountExtensionFields[IAccountExtensionField] | IRecordExtensionFields[IRecordExtensionField]> => {
   return (await record.getExtensionField(IDENTIFIER, fieldName)) as any;
 };
@@ -279,26 +235,6 @@ export const referenceToRecordFromTitle = async (str: string): Promise<Aha.Recor
   }
 
   return await RecordClass.select('id', 'referenceNum').find(ahaReference.referenceNum.toUpperCase());
-};
-
-/**
- * Get Aha Record from PR Id
- *
- * @param str
- * @returns
- */
-export const referenceToRecordFromId = async (str: string): Promise<Aha.RecordUnion | null> => {
-  const PRs = (await getExtensionFields('bitbucketPRs')) as IExtensionFieldPullRequest[];
-  const PR = PRs?.find((e) => `${e?.id}` === `${str}`);
-  const { type, referenceNum } = PR?.ahaReference ?? {};
-
-  const RecordClass = aha.models[type as any];
-  if (!RecordClass) {
-    console.log(`Unknown record type ${type}`);
-    return null;
-  }
-
-  return await RecordClass.select('id', 'referenceNum').find(referenceNum);
 };
 
 /**
